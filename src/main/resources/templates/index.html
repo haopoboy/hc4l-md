@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>HC4L Course</title>
+<meta name="viewport" content="width=device-width" charset="utf-8">
+<link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+</head>
+<body ng-app="app" layout="row" ng-controller="AppCtrl as ctrl">
+
+	<md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2"
+		md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+
+		<md-toolbar class="md-tall md-hue-2">
+			<span flex></span>
+			<div layout="column" class="md-toolbar-tools-bottom inset">
+				<span></span>
+				<div>{{currentUser.name}}</div>
+			</div>
+		</md-toolbar>
+		
+		<md-list>
+			<md-list-item ng-click="showView('my')">
+				<p>我的課表</p>
+			</md-list-item>
+		</md-list>
+	</md-sidenav>
+	
+	<div laytou="column" layout-fill>
+		<!-- Normal -->
+		<md-toolbar ng-show="!searching">
+			<div class="md-toolbar-tools">
+				<md-button ng-click="toggleSidenav('left')" hide-gt-sm class="md-icon-button">
+					<md-icon aria-label="Menu" md-svg-icon="https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg"></md-icon>
+				</md-button>
+				<h3>HC4L Course</h3>
+				<span flex></span>
+				<md-button aria-label="Search" ng-click="searching = !searching">
+					Search
+				</md-button>
+			</div>
+		</md-toolbar>
+		
+		<!-- Search -->
+		<md-toolbar ng-show="searching">
+			<div class="md-toolbar-tools">
+			<md-button aria-label="Back" ng-click="searching = !searching">
+				Back
+			</md-button>
+
+			<md-autocomplete
+				md-no-cache="ctrl.noCache" 
+				md-selected-item="ctrl.selectedItem"
+				md-search-text="ctrl.searchText"
+				md-items="item in ctrl.querySearch(ctrl.searchText)"
+				md-item-text="item.display" 
+				md-floating-label="Something here">
+				
+				<md-item-template>
+					<span md-highlight-text="ctrl.searchText">{{item.display}}</span>
+				</md-item-template>
+			</md-autocomplete>
+
+			<span flex></span>
+				<md-button aria-label="Search" ng-click="searching = !searching">
+					Search
+				</md-button>
+			</div>
+		</md-toolbar>
+	
+		<content ng-view></content>
+		 <md-button class="md-fab md-primary md-fab-bottom-right" 
+		 			aria-label="Show Suggestion" ng-click="openDialog($event)">
+          <md-icon md-svg-src="img/icons/android.svg"></md-icon>
+        </md-button>
+	</div>
+	
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-animate/angular-animate.js"></script>
+	<script src="bower_components/angular-aria/angular-aria.js"></script>
+	<script src="bower_components/angular-material/angular-material.js"></script>
+	<script src="bower_components/angular-route/angular-route.js"></script>
+	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+	<script src="js/ctrl.js"></script>
+
+	<script type="text/javascript">
+          angular
+          	.module('app', ['ngMaterial', 'ngRoute', 'ctrl'])
+          	
+          	/**
+			 * Config router
+			 */
+			.config(function($routeProvider, $controllerProvider, $mdIconProvider) {
+				$routeProvider
+					.when('/my', {
+						templateUrl: 'view/my.html'
+					})
+					.otherwise({redirectTo: '/my'})
+					;
+			})
+			
+			/**
+			* Config icon
+			*/
+			.config(function($mdIconProvider){
+				$mdIconProvider
+					/* .icon("menu", "icons/menu.svg", 24) */
+					;
+			})
+			;
+    </script>
+
+</body>
+</html>
